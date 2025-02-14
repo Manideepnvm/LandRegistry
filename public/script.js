@@ -11,9 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const ownerContact = document.getElementById('ownerContact').value;
         const landAddress = document.getElementById('landAddress').value;
         const landSize = document.getElementById('landSize').value;
+        const landPrice = document.getElementById('landPrice').value;
         const landType = document.getElementById('landType').value;
 
-        if (ownerName && ownerAddress && ownerContact && landAddress && landSize && landType) {
+        // Validate phone number
+        if (ownerContact.length !== 10) {
+            messageDiv.textContent = 'Please enter a valid phone number.';
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+            return;
+        }
+
+        // Validate land size and price
+        if (landSize < 0 || landPrice < 0) {
+            messageDiv.textContent = 'Please enter a valid land size and price.';
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+            return;
+        }
+
+        if (ownerName && ownerAddress && ownerContact && landAddress && landSize && landPrice && landType) {
             fetch('http://localhost:3000/api/register-land', {
                 method: 'POST',
                 headers: {
@@ -25,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ownerContact,
                     landAddress,
                     landSize,
+                    landPrice,
                     landType,
                 }),
             })
@@ -61,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 lands.forEach(land => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <span>ID: ${land.id}, Owner: ${land.ownerName}, Address: ${land.landAddress}, Size: ${land.landSize} acres, Type: ${land.landType}</span>
+                        <span>ID: ${land.id}, Owner: ${land.ownerName}, Address: ${land.landAddress}, Size: ${land.landSize} acres, Price: $${land.landPrice}, Type: ${land.landType}</span>
                         <button onclick="deleteLand(${land.id})">Delete</button>
                     `;
                     landList.appendChild(li);
