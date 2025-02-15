@@ -10,35 +10,48 @@
     <div class="container">
         <div class="animated-background"></div>
         <div class="form-container">
-            <h1>Land Registration Form</h1>
-            <form id="landRegistrationForm">
+            <div id="auth-forms">
+                <form id="signupForm">
+                    <h2>Sign Up</h2>
+                    <label for="signupUsername">Username:</label>
+                    <input type="text" id="signupUsername" name="username" required>
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" name="password" required autocomplete="new-password">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" name="email" required>
+                    <button type="submit">Sign Up</button>
+                </form>
+                <form id="signinForm">
+                    <h2>Sign In</h2>
+                    <label for="signinUsername">Username:</label>
+                    <input type="text" id="signinUsername" name="username" required>
+                    <label for="signinPassword">Password:</label>
+                    <input type="password" id="signinPassword" name="password" required autocomplete="current-password">
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+            <form id="landRegistrationForm" style="display: none;">
+                <h1>Land Registration Form</h1>
                 <h2>Owner Details</h2>
                 <label for="ownerName">Owner Name:</label>
                 <input type="text" id="ownerName" name="ownerName" required>
-
                 <label for="ownerAddress">Owner Address:</label>
                 <input type="text" id="ownerAddress" name="ownerAddress" required>
-
                 <label for="ownerContact">Owner Contact:</label>
-                <input type="number" id="ownerContact" name="ownerContact" required>
-
+                <input type="tel" id="ownerContact" name="ownerContact" required>
                 <h2>Land Details</h2>
                 <label for="landAddress">Land Address:</label>
                 <input type="text" id="landAddress" name="landAddress" required>
-
                 <label for="landSize">Land Size (in acres):</label>
                 <input type="number" id="landSize" name="landSize" required>
-
                 <label for="landPrice">Land Price (in Rs):</label>
                 <input type="number" id="landPrice" name="landPrice" required>
-
                 <label for="landType">Land Type:</label>
                 <select id="landType" name="landType" required>
                     <option value="residential">Residential</option>
                     <option value="commercial">Commercial</option>
                     <option value="agricultural">Agricultural</option>
                 </select>
-
                 <button type="submit">Register Land</button>
             </form>
             <div id="message" class="message"></div>

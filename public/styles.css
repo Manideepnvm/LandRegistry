@@ -55,6 +55,7 @@ body {
     text-align: center;
     overflow-y: auto;
     max-height: 80vh;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -85,6 +86,12 @@ input, select {
     font-size: 1em;
     color: #333;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #28a745;
+    outline: none;
 }
 
 button {
@@ -140,6 +147,11 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: transform 0.3s ease;
+}
+
+li:hover {
+    transform: scale(1.05);
 }
 
 li button {
