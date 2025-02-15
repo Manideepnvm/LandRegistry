@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const authForms = document.getElementById('auth-forms');
 
     let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userid');
 
     if (token) {
         authForms.style.display = 'none';
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
         if (data.success) {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('userid', data.userid);
             authForms.style.display = 'none';
             landRegistrationForm.style.display = 'block';
             fetchLands();
@@ -107,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     landSize,
                     landPrice,
                     landType,
+                    userId,
                 }),
             });
 
@@ -138,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             landList.innerHTML = '';
             lands.forEach(land => {
                 const li = document.createElement('li');
+
                 li.innerHTML = `
                     <span>ID: ${land.id}, Owner: ${land.ownerName}, Address: ${land.landAddress}, Size: ${land.landSize} acres, Price: $${land.landPrice}, Type: ${land.landType}</span>
                     <button onclick="deleteLand(${land.id})">Delete</button>

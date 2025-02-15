@@ -1,5 +1,3 @@
-//bb1a0ede0cc05f633e5a6d7f5e2b8d728a0cc93eb7ab906f5be31cd634647fe8
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
-const JWT_SECRET = 'bb1a0ede0cc05f633e5a6d7f5e2b8d728a0cc93eb7ab906f5be31cd634647fe8'; // Replace with your generated secret key
+const JWT_SECRET = '7856fc2796243fc87359b1ab2b7df1476192f11f980e23e8b83b0714e7b898a8'; // Replace with your generated secret key
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -50,7 +48,8 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid username or password' });
         }
         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-        res.json({ success: true, token });
+        const id = user.id;
+        res.json({ success: true, token, userid: id });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ success: false, message: 'Login failed' });
@@ -59,27 +58,29 @@ app.post('/api/login', async (req, res) => {
 
 // Middleware to authenticate JWT
 const authenticateJWT = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (token) {
-        try {
-            const decoded = jwt.verify(token, JWT_SECRET);
-            req.userId = decoded.userId;
-            next();
-        } catch (error) {
-            return res.status(401).json({ success: false, message: 'Invalid token' });
-        }
-    } else {
-        return res.status(401).json({ success: false, message: 'No token provided' });
-    }
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({ success: false, message: "No token provided" });
+
+    const token = authHeader.split(' ')[1]; // Extract token
+    console.log(token);
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err){
+            console.log(err);
+            return res.status(403).json({ success: false, message: "Invalid token" })};
+        req.userId = user.userId; // Ensure userId is passed
+        next();
+    });
 };
+
+
 
 // Register land
 app.post('/api/register-land', authenticateJWT, async (req, res) => {
-    const { ownerName, ownerAddress, ownerContact, landAddress, landSize, landPrice, landType } = req.body;
+    const { ownerName, ownerAddress, ownerContact, landAddress, landSize, landPrice, landType, userId } = req.body;
     try {
         const [result] = await db.execute(
             'INSERT INTO lands (ownerName, ownerAddress, ownerContact, landAddress, landSize, landPrice, landType, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [ownerName, ownerAddress, ownerContact, landAddress, landSize, landPrice, landType, req.userId]
+            [ownerName, ownerAddress, ownerContact, landAddress, landSize, landPrice, landType, userId]
         );
         res.json({ success: true, landId: result.insertId });
     } catch (error) {
